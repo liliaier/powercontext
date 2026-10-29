@@ -33,7 +33,18 @@ async function get<T>(url: string): Promise<T> {
 }
 
 export const api = {
-  health: () => get<{ ok: boolean; count: number; dbPath: string }>("/api/health"),
+  /** 返回健康状态；seekdb 未就绪时带回 error 而不是抛错，便于界面展示原因 */
+  health: async (): Promise<{
+    ok: boolean;
+    mode?: string;
+    count?: number;
+    dbPath?: string;
+    error?: string;
+  }> => {
+    const res = await fetch("/api/health");
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok && !!data.ok, ...data };
+  },
 
   importItems: (items: ImportItem[]) =>
     post<{ ok: boolean; imported: number; total: number }>("/api/import", { items }),

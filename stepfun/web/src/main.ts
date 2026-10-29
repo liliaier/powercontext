@@ -222,20 +222,34 @@ async function loadModel(dtype: DType) {
 // 后端状态
 // ---------------------------------------------------------------------------
 async function refreshBackend() {
-  try {
-    const h = await api.health();
-    els.backend.textContent = `数据库：seekdb 已连接（${h.count} 篇）`;
+  const h = await api.health();
+  if (h.ok) {
+    els.backend.textContent = `数据库：seekdb 已连接（${h.count ?? 0} 篇）`;
     els.backend.className = "badge good";
-  } catch {
-    els.backend.textContent = "数据库：未连接";
+  } else {
+    els.backend.textContent = "数据库：seekdb 未就绪";
     els.backend.className = "badge err";
+    setStatus(
+      els.kbStatus,
+      `seekdb 未就绪：${h.error ?? "未知错误"}（请检查后端日志与 seekdb 环境）`,
+      "err"
+    );
   }
 }
 
 async function refreshKb() {
   try {
-    const [h, docs] = await Promise.all([api.health(), api.documents()]);
-    setStatus(els.kbStatus, `知识库共 ${h.count} 篇文档｜seekdb 数据目录：${h.dbPath}`, "ok");
+    const h = await api.health();
+    if (!h.ok) {
+      setStatus(els.kbStatus, `seekdb 未就绪：${h.error ?? "未知错误"}`, "err");
+      return;
+    }
+    const docs = await api.documents();
+    setStatus(
+      els.kbStatus,
+      `知识库共 ${h.count ?? docs.documents.length} 篇文档｜seekdb 数据目录：${h.dbPath ?? "-"}`,
+      "ok"
+    );
     els.kbList.innerHTML = docs.documents
       .slice(0, 50)
       .map((d) => `<li><code>${escapeHtml(d.id)}</code> ${escapeHtml(d.text ?? "")}</li>`)
