@@ -1,0 +1,11 @@
+node_modules/
+dist/
+*.db
+seekdb.db/
+smoke-seekdb.db/
+minidb/
+smoke-test.mjs
+mini-test.mjs
+.env
+.DS_Store
+Thumbs.db

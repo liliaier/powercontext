@@ -1,0 +1,12 @@
+{
+  "name": "stepfun-kb",
+  "version": "1.0.0",
+  "private": true,
+  "description": "端侧 AI 推理性能优化与 seekdb 混合检索 —— OceanBase 大赛 StepFun 题目",
+  "scripts": {
+    "setup": "npm --prefix server install --legacy-peer-deps && npm --prefix web install --legacy-peer-deps && npm --prefix web run build",
+    "build": "npm --prefix web run build",
+    "start": "npm --prefix server start",
+    "dev:web": "npm --prefix web run dev"
+  }
+}

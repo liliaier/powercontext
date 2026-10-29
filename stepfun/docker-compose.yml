@@ -1,0 +1,13 @@
+# 可选：以「本地 server 方式」部署 seekdb（默认 embedded 模式不需要本文件）
+# 用法：docker compose up -d
+# 然后以 SEEKDB_MODE=server 启动后端：
+#   SEEKDB_MODE=server SEEKDB_HOST=127.0.0.1 SEEKDB_PORT=2881 npm start
+services:
+  seekdb:
+    image: oceanbase/seekdb:latest
+    container_name: stepfun-seekdb
+    ports:
+      - "2881:2881"
+    volumes:
+      - ./seekdb-data:/var/lib/oceanbase
+    restart: unless-stopped

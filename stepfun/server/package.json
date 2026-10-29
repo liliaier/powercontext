@@ -1,0 +1,16 @@
+{
+  "name": "stepfun-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "StepFun 题目后端：seekdb 嵌入式存储 + 混合检索 HTTP 服务",
+  "scripts": {
+    "start": "node src/index.mjs",
+    "dev": "node --watch src/index.mjs"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "seekdb": "1.4.0"
+  }
+}
