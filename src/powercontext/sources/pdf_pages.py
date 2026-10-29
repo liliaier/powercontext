@@ -167,6 +167,31 @@ def _query_variants(question: str) -> tuple[tuple[str, float], ...]:
             r"capex|capital expenditure",
             "consolidated statements of cash flows capital spending purchases of property plant and equipment",
         ),
+        (
+            r"capital[- ]intensive|capital intensity",
+            "consolidated statements of income balance sheet cash flows capital expenditures "
+            "property plant equipment total assets net sales",
+        ),
+        (
+            r"segment|business segment|divisions?",
+            "worldwide sales change by business segment organic sales acquisitions divestitures translation",
+        ),
+        (
+            r"margin|profitab",
+            "operating margin gross margin percent of sales operating profit net sales",
+        ),
+        (
+            r"ratio|liquidity|working capital|current assets",
+            "consolidated balance sheets current assets current liabilities cash and cash equivalents",
+        ),
+        (
+            r"margin|gross profit|operating profit|return on",
+            "consolidated statements of income net sales cost of sales gross profit operating income",
+        ),
+        (
+            r"m\s*&\s*a|acquisition|divestiture|organic",
+            "acquisitions divestitures organic sales growth translation",
+        ),
         (r"balance sheet|pp\s*&\s*e|ppne", "consolidated balance sheet property plant and equipment net"),
     )
     additions = [replacement for pattern, replacement in targeted if re.search(pattern, lowered, re.I)]
@@ -181,6 +206,26 @@ def _query_variants(question: str) -> tuple[tuple[str, float], ...]:
         variants.append(("depreciation amortization", 1.1))
     if re.search(r"capex|capital expenditure", lowered):
         variants.append(("capital spending", 1.1))
+    if re.search(r"capital[- ]intensive|capital intensity|total assets|return on assets", lowered):
+        variants.append(("consolidated statement of income", 3.0))
+        variants.append(("consolidated balance sheet", 3.0))
+        variants.append(("consolidated statement of cash flows", 3.0))
+        variants.append(("net sales operating income", 2.0))
+        variants.append(("cash flows from operating activities", 2.0))
+        variants.append(("total assets total liabilities", 2.0))
+    if re.search(r"ratio|liquidity|working capital", lowered):
+        variants.append(("consolidated balance sheets current assets current liabilities", 3.0))
+    if re.search(r"margin|gross profit|operating profit|return on", lowered):
+        variants.append(("consolidated statements of income net sales cost of sales gross profit", 3.0))
+    if re.search(
+        r"margin|profitab|operating income|gross profit|revenue|earnings|tax rate|effective tax",
+        lowered,
+    ):
+        variants.append(("consolidated statements of income", 3.0))
+    if re.search(r"balance sheet|liabilit|liabilities|deposit|borrowing|debt|securities", lowered):
+        variants.append(("consolidated balance sheets", 3.0))
+    if re.search(r"effective tax rate|tax rate", lowered):
+        variants.append(("effective tax rate", 3.0))
     unique: dict[str, tuple[str, float]] = {}
     for text, weight in variants:
         key = " ".join(text.casefold().split())
