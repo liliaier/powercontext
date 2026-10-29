@@ -7,6 +7,7 @@
     "setup": "npm --prefix server install --legacy-peer-deps && npm --prefix web install --legacy-peer-deps && npm --prefix web run build",
     "build": "npm --prefix web run build",
     "start": "npm --prefix server start",
-    "dev:web": "npm --prefix web run dev"
+    "dev:web": "npm --prefix web run dev",
+    "selftest": "node scripts/selftest.mjs"
   }
 }

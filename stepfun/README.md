@@ -73,6 +73,17 @@ SEEKDB_MODE=server npm start  # 以上线 seekdb server
 SEEKDB_MODE=mock npm start
 ```
 
+### 数据层自测（推荐）
+
+启动后端后，另开一个终端验证 seekdb 全链路（建集合 → 写入 → 混合检索 → 计数 → 清空）：
+
+```bash
+npm run selftest
+# 或指定地址：SELFTEST_URL=http://localhost:3001 npm run selftest
+```
+
+> 该脚本用随机向量占位（只验证 seekdb 数据通路与 SQL，不验证语义质量），可与前端浏览器流程互为补充。
+
 ### 环境变量
 
 | 变量 | 默认 | 说明 |
